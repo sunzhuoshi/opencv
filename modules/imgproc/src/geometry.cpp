@@ -94,6 +94,8 @@ cvBoxPoints( CvBox2D box, CvPoint2D32f pt[4] )
 
 double cv::pointPolygonTest( InputArray _contour, Point2f pt, bool measureDist )
 {
+    CV_INSTRUMENT_REGION()
+
     double result = 0;
     Mat contour = _contour.getMat();
     int i, total = contour.checkVector(2), counter = 0;
@@ -504,6 +506,8 @@ static int intersectConvexConvex_( const Point2f* P, int n, const Point2f* Q, in
 
 float cv::intersectConvexConvex( InputArray _p1, InputArray _p2, OutputArray _p12, bool handleNested )
 {
+    CV_INSTRUMENT_REGION()
+
     Mat p1 = _p1.getMat(), p2 = _p2.getMat();
     CV_Assert( p1.depth() == CV_32S || p1.depth() == CV_32F );
     CV_Assert( p2.depth() == CV_32S || p2.depth() == CV_32F );
@@ -564,7 +568,7 @@ float cv::intersectConvexConvex( InputArray _p1, InputArray _p2, OutputArray _p1
             result = fp2;
             nr = m;
         }
-        else if( pointPolygonTest(_InputArray(fp2, n), fp1[0], false) >= 0 )
+        else if( pointPolygonTest(_InputArray(fp2, m), fp1[0], false) >= 0 )
         {
             result = fp1;
             nr = n;

@@ -42,7 +42,9 @@
 
 #include "precomp.hpp"
 
-#if defined WIN32 || defined _WIN32 || defined WINCE
+#include "opencv2/core/utils/filesystem.hpp"
+
+#if defined _WIN32 || defined WINCE
 # include <windows.h>
 const char dir_separators[] = "/\\";
 const char native_separator = '\\';
@@ -139,7 +141,7 @@ const char native_separator = '/';
 
 static bool isDir(const cv::String& path, DIR* dir)
 {
-#if defined WIN32 || defined _WIN32 || defined WINCE
+#if defined _WIN32 || defined WINCE
     DWORD attributes;
     BOOL status = TRUE;
     if (dir)
@@ -167,6 +169,12 @@ static bool isDir(const cv::String& path, DIR* dir)
     int is_dir = S_ISDIR( stat_buf.st_mode);
     return is_dir != 0;
 #endif
+}
+
+bool cv::utils::fs::isDirectory(const cv::String& path)
+{
+    CV_INSTRUMENT_REGION()
+    return isDir(path, NULL);
 }
 
 static bool wildcmp(const char *string, const char *wild)
@@ -259,6 +267,8 @@ static void glob_rec(const cv::String& directory, const cv::String& wildchart, s
 
 void cv::glob(String pattern, std::vector<String>& result, bool recursive)
 {
+    CV_INSTRUMENT_REGION()
+
     result.clear();
     String path, wildchart;
 
